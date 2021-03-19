@@ -22,6 +22,7 @@ func _ready():
 	current_state=states[1]
 
 func apply_movement(delta):
+	clamp_player_position()
 	Move(delta)
 	apply_gravity(delta)
 	if current_state in ["Jump"]:
@@ -56,14 +57,12 @@ func _unhandled_key_input(event):
 		jump_state.jumping=true
 
 func Move(delta):
-	if Input.is_action_pressed("ui_left"):
-		moving_state.direction=-2
-	elif Input.is_action_pressed("ui_right"):
-		moving_state.direction=2
-	else:
-		moving_state.direction=1
-	velocity.x=speed*moving_state.direction
+	moving_state.direction=int(Input.is_action_pressed("ui_right"))-int(Input.is_action_pressed("ui_left"))
+	velocity.x=lerp(velocity.x,speed*moving_state.direction,0.4)
 func jump():
 	velocity.y=jump_speed
 func apply_gravity(delta):
 	velocity.y+=gravity*delta
+func clamp_player_position():
+	position.x=clamp(position.x,0,1020)
+

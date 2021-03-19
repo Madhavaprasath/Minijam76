@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
-const speed=250
-const jump_speed=-500
+const speed=300
+const jump_speed=-600
 const gravity=900
 
 var states={}
