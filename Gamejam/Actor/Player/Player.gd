@@ -1,6 +1,12 @@
 extends "res://Actor/Actor.gd"
 
 
+var max_jump_height=3*64
+var min_jump_height=1.25*64
+var max_jump_velocity
+var min_jump_velocity
+var jump_duration=0.75
+
 class jump:
 	var jumping=false
 	var can_jump=true
@@ -9,9 +15,11 @@ class smash:
 	var smashing=false
 class moving:
 	var direction=1
+
 onready var jump_state=jump.new()
 onready var smash_state=smash.new()
 onready var moving_state=moving.new()
+
 func _init():
 	states={1:"Moving",
 			2:"Jump",
@@ -20,17 +28,21 @@ func _init():
 
 func _ready():
 	current_state=states[1]
-
+	gravity=(2*max_jump_height)/pow(jump_duration,2)
+	max_jump_velocity=-sqrt(2*max_jump_height*gravity)
+	min_jump_velocity=-sqrt(2*min_jump_height*gravity)
 func apply_movement(delta):
 	clamp_player_position()
 	Move(delta)
 	apply_gravity(delta)
 	if current_state in ["Jump"]:
 		if is_on_floor():
-			jump()
+			jump_state.jumping=true
 		elif !is_on_floor():
 			jump_state.jumping=false
 	velocity=move_and_slide(velocity,Vector2.UP)
+
+
 func match_state(delta):
 	match current_state:
 		"Moving":
@@ -54,15 +66,18 @@ func animation(transition):
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_up") && current_state in ["Moving"]:
+		velocity.y=max_jump_velocity
 		jump_state.jumping=true
+	if event.is_action_released("ui_up") && velocity.y<min_jump_velocity:
+		velocity.y=min_jump_velocity
 
 func Move(delta):
 	moving_state.direction=int(Input.is_action_pressed("ui_right"))-int(Input.is_action_pressed("ui_left"))
 	velocity.x=lerp(velocity.x,speed*moving_state.direction,0.4)
-func jump():
-	velocity.y=jump_speed
+
 func apply_gravity(delta):
 	velocity.y+=gravity*delta
+
 func clamp_player_position():
 	position.x=clamp(position.x,0,1020)
 

@@ -2,8 +2,8 @@ extends KinematicBody2D
 
 const speed=300
 const jump_speed=-600
-const gravity=900
 
+var gravity=1000
 var states={}
 var current_state
 var velocity=Vector2()
