@@ -16,7 +16,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Vector"
+run/main_scene="res://GameWorld/GameWorld.tscn"
 config/icon="res://icon.png"
+
+[layer_names]
+
+2d_physics/layer_1="Envirorment"
+2d_physics/layer_2="Player"
 
 [rendering]
 
