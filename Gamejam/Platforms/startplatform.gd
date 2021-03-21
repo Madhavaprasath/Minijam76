@@ -3,7 +3,6 @@ extends Node2D
  
 signal entered
 
-export var slope_area_enabled=false
 var spawn_next_platform=false
 var entered=false
 var player=null

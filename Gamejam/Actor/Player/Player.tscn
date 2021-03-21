@@ -1,11 +1,13 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Sprites/player.png" type="Texture" id=1]
 [ext_resource path="res://Actor/Actor.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Actor/Player/Player.gd" type="Script" id=3]
+[ext_resource path="res://Hitbox and Hurtbox/Hurtbox.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Hitbox and Hurtbox/Hitbox.tscn" type="PackedScene" id=5]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 33.088, 31.7257 )
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 10, 42.6667 )
 
 [sub_resource type="Animation" id=2]
 resource_name = "Moving"
@@ -24,12 +26,16 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
+[sub_resource type="CircleShape2D" id=4]
+radius = 200.0
+
 [node name="Player" instance=ExtResource( 2 )]
 collision_layer = 2
 script = ExtResource( 3 )
 
 [node name="CollisionShape2D" parent="." index="0"]
-shape = SubResource( 1 )
+scale = Vector2( 2, 0.75 )
+shape = SubResource( 5 )
 
 [node name="Sprite" parent="body" index="0"]
 scale = Vector2( 2, 2 )
@@ -39,3 +45,17 @@ hframes = 8
 [node name="AnimationPlayer" parent="body" index="1"]
 autoplay = "Moving"
 anims/Moving = SubResource( 2 )
+
+[node name="PlayerHitbox" parent="body/Hithurtbox" index="0" instance=ExtResource( 5 )]
+collision_layer = 0
+
+[node name="CollisionShape2D" parent="body/Hithurtbox/PlayerHitbox" index="0"]
+shape = SubResource( 4 )
+disabled = true
+
+[node name="Timer" type="Timer" parent="body/Hithurtbox/PlayerHitbox" index="1"]
+wait_time = 0.3
+
+[node name="PlayerHurtbox" parent="body/Hithurtbox" index="1" instance=ExtResource( 4 )]
+
+[editable path="body/Hithurtbox/PlayerHitbox"]

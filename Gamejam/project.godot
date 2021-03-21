@@ -23,6 +23,8 @@ config/icon="res://icon.png"
 
 2d_physics/layer_1="Envirorment"
 2d_physics/layer_2="Player"
+2d_physics/layer_3="Hitbox"
+2d_physics/layer_4="Hurtbox"
 
 [rendering]
 

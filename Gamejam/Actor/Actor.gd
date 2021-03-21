@@ -8,6 +8,8 @@ var states={}
 var current_state
 var previous_state
 var velocity=Vector2()
+var health=100
+
 
 onready var animation_player=get_node("body/AnimationPlayer")
 func _physics_process(delta):
@@ -29,4 +31,12 @@ func animation(state):
 	pass 
 
 func previous_state_things(previous_state):
+	pass
+
+func take_damage(damage):
+	health-=damage
+	if health<=0:
+		die()
+
+func die():
 	pass

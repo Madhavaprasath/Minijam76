@@ -13,6 +13,7 @@ class jump:
 	var can_smash=true
 class smash:
 	var smashing=false
+	var smash_speed=0.0
 class moving:
 	var direction=1
 
@@ -45,6 +46,7 @@ func apply_movement(delta):
 		smash_state.smashing=false
 	if current_state in ["Smash"]:
 		velocity.y+=gravity*6*delta
+		smash_state.smash_speed=velocity.y
 	velocity=move_and_slide(velocity,Vector2.UP)
 
 
@@ -72,8 +74,15 @@ func animation(state):
 func previous_state_things(previous_state):
 	match previous_state:
 		"Smash":
-			screen_shake._shake_the_screen(0.5,rand_range(4,7),1)
-
+			var player_hit_box=get_node("body/Hithurtbox/PlayerHitbox")
+			var collision_shape=get_node("body/Hithurtbox/PlayerHitbox/CollisionShape2D")
+			var timer=get_node("body/Hithurtbox/PlayerHitbox/Timer")
+			screen_shake._shake_the_screen(0.5,smash_state.smash_speed*0.007,1)
+			collision_shape.disabled=false
+			destroy(player_hit_box)
+			timer.start(0.5)
+			yield(timer,"timeout")
+			collision_shape.disabled=true
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_up") && current_state in ["Moving"]:
@@ -94,3 +103,6 @@ func apply_gravity(delta):
 func clamp_player_position():
 	position.x=clamp(position.x,-475,475)
 
+func destroy(player_hitbox:Area2D):
+	for i in player_hitbox.get_overlapping_bodies():
+		print(i)

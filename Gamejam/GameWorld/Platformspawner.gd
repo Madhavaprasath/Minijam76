@@ -23,7 +23,6 @@ func _physics_process(delta):
 func spawn_platforms():
 	last_platform_componets=spawn_platform(Vector2(ending_position))
 	ending_position=(last_platform_componets[0].end_point.global_position)
-	print(ending_position)
 func spawn_platform(Position:Vector2)->Array:
 	var platform_child=take_random_platform(Platform_Array).instance()
 	platform_child.position=Position
