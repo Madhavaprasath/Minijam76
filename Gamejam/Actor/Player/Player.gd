@@ -19,6 +19,7 @@ class moving:
 onready var jump_state=jump.new()
 onready var smash_state=smash.new()
 onready var moving_state=moving.new()
+onready var screen_shake=get_parent().get_node("Screen_shake")
 
 func _init():
 	states={1:"Moving",
@@ -43,7 +44,7 @@ func apply_movement(delta):
 			jump_state.jumping=false
 		smash_state.smashing=false
 	if current_state in ["Smash"]:
-		velocity.y+=(gravity*4)*delta
+		velocity.y+=gravity*6*delta
 	velocity=move_and_slide(velocity,Vector2.UP)
 
 
@@ -65,8 +66,14 @@ func match_state(delta):
 				return states[3]
 	return null
 
-func animation(transition):
-	pass 
+func animation(state):
+	animation_player.play(state)
+
+func previous_state_things(previous_state):
+	match previous_state:
+		"Smash":
+			screen_shake._shake_the_screen(0.5,rand_range(4,7),1)
+
 
 func _unhandled_key_input(event):
 	if event.is_action_pressed("ui_up") && current_state in ["Moving"]:
