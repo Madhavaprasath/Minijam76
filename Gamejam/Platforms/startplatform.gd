@@ -15,8 +15,8 @@ func _ready():
 	set_physics_process(false)
 
 func _physics_process(delta):
-	var distance = (player.position).distance_to(self.position)
-	if distance>4000:
+	var distance = (player.global_position).distance_to(self.global_position)
+	if distance>2000:
 		queue_free()
 
 

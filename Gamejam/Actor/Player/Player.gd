@@ -34,12 +34,16 @@ func _ready():
 func apply_movement(delta):
 	clamp_player_position()
 	Move(delta)
-	apply_gravity(delta)
+	if current_state !="Smash":
+		apply_gravity(delta)
 	if current_state in ["Jump"]:
 		if is_on_floor():
 			jump_state.jumping=true
 		elif !is_on_floor():
 			jump_state.jumping=false
+		smash_state.smashing=false
+	if current_state in ["Smash"]:
+		velocity.y+=(gravity*4)*delta
 	velocity=move_and_slide(velocity,Vector2.UP)
 
 
@@ -49,8 +53,6 @@ func match_state(delta):
 			if jump_state.jumping:
 				return states[2]
 		"Jump":
-			if smash_state.smashing:
-				return states[3]
 			if !jump_state.jumping:
 				return states[4]
 		"Smash":
@@ -59,6 +61,8 @@ func match_state(delta):
 		"Fall":
 			if is_on_floor():
 				return states[1]
+			if smash_state.smashing:
+				return states[3]
 	return null
 
 func animation(transition):
@@ -70,6 +74,8 @@ func _unhandled_key_input(event):
 		jump_state.jumping=true
 	if event.is_action_released("ui_up") && velocity.y<min_jump_velocity:
 		velocity.y=min_jump_velocity
+	if event.is_action_pressed("ui_down")&&current_state in ["Fall"]:
+		smash_state.smashing=true
 
 func Move(delta):
 	moving_state.direction=int(Input.is_action_pressed("ui_right"))-int(Input.is_action_pressed("ui_left"))
@@ -79,5 +85,5 @@ func apply_gravity(delta):
 	velocity.y+=gravity*delta
 
 func clamp_player_position():
-	position.x=clamp(position.x,0,1020)
+	position.x=clamp(position.x,-475,475)
 
